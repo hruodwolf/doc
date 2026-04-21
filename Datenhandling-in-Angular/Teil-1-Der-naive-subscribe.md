@@ -86,7 +86,7 @@ Sobald sich der Wert von `products` ändert, aktualisiert Angular automatisch di
 
 
 
-**Zusammengefasst**:
+### Zusammengefasst
 
 *   `http.get()` allein startet **keine Anfrage**
 *   `subscribe()` aktiviert das Observable und definiert den Callback
@@ -206,3 +206,9 @@ Für einfache REST-Calls, bei denen Daten ausschließlich angezeigt werden, ist 
 Genau darum geht es im nächsten Artikel dieser Serie:
 
 **Teil 2: Die schlanke async-Pipe – Daten anzeigen ohne Subscribe**
+
+## Quellen
+- Angular Documentation – Making HTTP requests  
+  https://angular.dev/guide/http/making-requests
+- Angular Documentation – HTTP: Request data from a server
+  https://v17.angular.io/guide/http-request-data-from-server
