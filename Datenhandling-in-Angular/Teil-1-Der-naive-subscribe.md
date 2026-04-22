@@ -208,7 +208,7 @@ Genau darum geht es im nächsten Artikel dieser Serie:
 **Teil 2: Die schlanke async-Pipe – Daten anzeigen ohne Subscribe**
 
 ## Quellen
-- Angular Documentation – Making HTTP requests  
--- https://angular.dev/guide/http/making-requests
-- Angular Documentation – HTTP: Request data from a server
--- https://v17.angular.io/guide/http-request-data-from-server
+* Angular Documentation – Making HTTP requests
+** https://angular.dev/guide/http/making-requests
+* Angular Documentation – HTTP: Request data from a server
+** https://v17.angular.io/guide/http-request-data-from-server
