@@ -62,7 +62,7 @@ Diese Zeile liefert **ein Observable** zurück.\
 Zu diesem Zeitpunkt werden **noch keine Daten geladen** und **keine HTTP‑Anfrage gestartet**.\
 Das Observable beschreibt lediglich, *was passieren soll*, sobald jemand es abonniert.
 
-Erst mit dem Aufruf von `subscribe()` wird das Observable tatsächlich aktiviert – **jetzt entsteht eine Subscription und die Anfrage wird an den Server gesendet**.
+Erst mit dem Aufruf von `subscribe()` wird das Observable tatsächlich aktiviert – **jetzt entsteht eine Subscription und die asynchrone Anfrage wird an den Server gesendet**.
 
 ```ts
 .subscribe((value) => {
@@ -75,6 +75,7 @@ Im `subscribe()` wird die **Callback‑Funktion** definiert, also das Verhalten,
 In diesem Fall:
 
 *   werden die vom Server gelieferten Daten (`value`)
+*   – sobald sie verfügbar sind –   
 *   der lokalen Komponenteneigenschaft `products` zugewiesen.
 
 Dadurch stehen die Daten der Komponente zur Verfügung.
