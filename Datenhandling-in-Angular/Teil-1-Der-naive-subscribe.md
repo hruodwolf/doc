@@ -209,6 +209,6 @@ Genau darum geht es im nächsten Artikel dieser Serie:
 
 ## Quellen
 - Angular Documentation – Making HTTP requests  
-  https://angular.dev/guide/http/making-requests
+-- https://angular.dev/guide/http/making-requests
 - Angular Documentation – HTTP: Request data from a server
-  https://v17.angular.io/guide/http-request-data-from-server
+-- https://v17.angular.io/guide/http-request-data-from-server
