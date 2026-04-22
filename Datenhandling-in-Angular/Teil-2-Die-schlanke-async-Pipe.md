@@ -12,3 +12,15 @@ Aussage aus: https://blog.angular-university.io/angular-reactive-templates/
 Because now we have here the state stored on this variable at the level of the component, we might be tempted to further write code that mutates that state.
 Here in this small example, it would not cause an issue, but in a larger application, this could potentially cause some maintainability problems.
 => D.h. Zustand in der Komponente ist nicht optimal, weil man diesen potenziel verändern kann
+
+
+
+Die async‑Pipe existiert bereits seit Angular 2, wurde in vielen Projekten jedoch lange Zeit kaum konsequent eingesetzt.
+
+Oder noch knackiger:
+
+Obwohl die async‑Pipe seit Angular 2 verfügbar ist, dominiert in vielen bestehenden Codebases bis heute der manuelle subscribe().
+
+Kaum propagiert
+Schulungen zeigten nur manuells subscribe()
+Viele Best-Practises kamen erst Jahre später, erst mit stärkerer Nutzung von RxJS
