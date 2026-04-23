@@ -1,4 +1,15 @@
-# Teil 2: Die schlanke async-Pipe – Daten anzeigen ohne Subscribe
+# Teil 2: Die schlanke async‑Pipe – Daten anzeigen ohne Subscribe
+
+Gerade in wachsenden Komponenten wird schnell sichtbar, dass der manuelle Umgang mit Subscriptions keinen guten Skalierungsweg darstellt.
+
+Im ersten Teil dieser Serie haben wir uns das Ur‑Pattern für REST‑Calls in Angular angesehen: den manuellen `subscribe()`.
+
+Wir haben die Hintergründe beleuchtet, anhand von Code‑Beispielen gezeigt, wie dieser Ansatz aussieht, und erklärt, warum er über viele Jahre hinweg so häufig eingesetzt wurde.
+
+In diesem Beitrag betrachten wir nun die Kehrseite des manuellen Subscribe‑Patterns: die wachsende Komplexität, die dadurch in Komponenten entstehen kann. Außerdem zeigen wir, wie sich diese Komplexität durch den Einsatz der `async`‑Pipe deutlich reduzieren lässt – und wie dadurch übersichtlicher und wartbarer Angular‑Code entsteht.
+``
+
+
 Analyse Code 3
 welche Probleme / Nachteile hat es
 
