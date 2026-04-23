@@ -58,8 +58,12 @@ export class App implements OnInit, OnDestroy {
 ```
 
 
-Nachteile:
-- Der code wächst mit weiteren Subscription vertikal
+Mögliche Nachteile / Problematiken:
+- Manuelle Verwaltung / Umgang mit der Subscription eines Observables in einer Komponente. Bei einem Http-Request wie in unserem Fall wird die Subscripton completet sobald Daten verfügbar sind. Bei langlebigen Observables kann es aber zu möglichen Problemen kommen. <Copilot: welche Probleme sind es?>
+- Die Komponente wächst vertikal mit weiteren Subscription, da loading State, destroy$, usw. für zweite oder dritte Subscription dazu kommen. Code wird unleserlich
+- Der State wird auf der Ebene der Komponente durch das speichern der Variblen products[] verwaltet. Im weiteren Entwicklungsverlauf, könnte dieser Zustand verändert werden. <Copilot: was ist hier die Problematik? auch in einem Satz beschreiben>
+- Eher imperativer Ansatz, satt deklarative Code zu schreiben. Da wir die Variable products[] initialisieren und diese an das Template weiterreichen. <Copilot: hier in einem Satz erklären warum imperative nicht so gut ist>
+- Kein Reactive Style
 
 
 
