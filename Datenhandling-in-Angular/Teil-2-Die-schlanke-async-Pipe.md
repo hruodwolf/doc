@@ -1,3 +1,16 @@
+# Teil 2: Die schlanke async-Pipe – Daten anzeigen ohne Subscribe
+Analyse Code 3
+welche Probleme / Nachteile hat es
+
+
+und jetzt kommt die async-Pipe ins spiel
+
+Verbesserter Code mit async-Pipe
+
+
+
+
+
 Empfehlungen & nächster Schritt
 Was du sehr gut triffst:
 	• historische Einordnung
