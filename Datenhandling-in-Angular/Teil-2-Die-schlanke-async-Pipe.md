@@ -88,8 +88,6 @@ Dadurch reduziert sich der notwendige Boilerplate‑Code erheblich. Komponenten 
 
 Insgesamt verlagert die `async`‑Pipe die Verantwortung für das Subscription‑Management aus der Komponente heraus und ermöglicht so klar strukturierte, wartbare Angular‑Anwendungen mit einem konsistenteren reaktiven Datenfluss.
 
-Gerne – ich integriere deine Ergänzungen als **flüssigen Text**, korrigiere Sprache und Stil und halte die Aussage bewusst historisch‑einordnend, nicht wertend.
-
 ## Historische Einordnung
 
 Die `async`‑Pipe existiert bereits seit Angular 2, wurde in vielen Projekten jedoch über einen langen Zeitraum hinweg kaum konsequent eingesetzt. In den Anfangsjahren von Angular lag der Fokus häufig auf einem schnellen Einstieg und auf grundlegendem Verständnis von Komponenten, Services und HTTP‑Requests. Entsprechend wurden in Schulungen und Tutorials meist manuelle `subscribe()`‑Aufrufe gezeigt, da sie leicht nachvollziehbar und gut sichtbar waren.
@@ -97,34 +95,6 @@ Die `async`‑Pipe existiert bereits seit Angular 2, wurde in vielen Projekten
 Zudem wurde die `async`‑Pipe lange Zeit nur wenig aktiv propagiert. Viele Best Practices rund um reaktive Programmierung, saubere Trennung von Zuständigkeiten und deklarative Template‑Strukturen haben sich erst im Laufe der Jahre etabliert. Erst mit der stärkeren und breiteren Nutzung von RxJS im Projektalltag rückte auch die `async`‑Pipe zunehmend in den Fokus.
 
 In bestehenden Codebasen spiegelte sich diese Entwicklung häufig wider: Selbst wenn die `async`‑Pipe bereits verfügbar war, blieb der manuelle `subscribe()` lange der dominierende Ansatz. Die konsequente Nutzung deklarativer Patterns setzte sich oft erst deutlich später durch – meist dann, wenn Anwendungen größer wurden und die Nachteile manueller Subscription‑Verwaltung immer deutlicher zutage traten.
-
-
-
-
-
-
-und jetzt kommt die async-Pipe ins spiel
-
-Verbesserter Code mit async-Pipe
-
-Artikel 2: Deklarativ & Lifecycle‑Management durch Angular
-
-historische Einordnung
-Die async‑Pipe existiert bereits seit Angular 2, wurde in vielen Projekten jedoch lange Zeit kaum konsequent eingesetzt.
-Kaum propagiert
-Schulungen zeigten nur manuells subscribe()
-Viele Best-Practises kamen erst Jahre später, erst mit stärkerer Nutzung von RxJS
-
-Empfehlungen & nächster Schritt
-Was du sehr gut triffst:
-
-	• realistische Projektperspektive
-	• differenzierte Aussage („nicht falsch, aber …“)
-Kleiner Verbesserungsvorschlag für Artikel 2:
-	• Kontrast klar machen:
-		• Artikel 1: Imperativ & Lifecycle‑Verantwortung beim Entwickler
-
-
 
 
 
