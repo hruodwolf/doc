@@ -8,10 +8,7 @@ Wir haben die Hintergründe beleuchtet, anhand von Code‑Beispielen gezeigt, wi
 
 In diesem Beitrag betrachten wir nun die Kehrseite des manuellen Subscribe‑Patterns: die wachsende Komplexität, die dadurch in Komponenten entstehen kann. Außerdem zeigen wir, wie sich diese Komplexität durch den Einsatz der `async`‑Pipe deutlich reduzieren lässt – und wie dadurch übersichtlicher und wartbarer Angular‑Code entsteht.
 
-=====
-
-
-Betrachten wir noch einmal den "manuelle subscribe" an und ergründen die Problematiken diesen Ansatzes.
+Im nächsten Schritt analysieren wir den manuellen `subscribe()` und die damit einhergehenden Herausforderungen.
 
 **Code 1: Manueller Subscribe**
 ```ts
@@ -57,54 +54,60 @@ export class App implements OnInit, OnDestroy {
 }
 ```
 
+## Mögliche Nachteile und Problematiken
 
-Mögliche Nachteile / Problematiken:
-- Manuelle Verwaltung / Umgang mit der Subscription eines Observables in einer Komponente. Bei einem Http-Request wie in unserem Fall wird die Subscripton completet sobald Daten verfügbar sind. Bei langlebigen Observables kann es aber zu möglichen Problemen kommen. <Copilot: welche Probleme sind es?>
-- Die Komponente wächst vertikal mit weiteren Subscription, da loading State, destroy$, usw. für zweite oder dritte Subscription dazu kommen. Code wird unleserlich
-- Der State wird auf der Ebene der Komponente durch das speichern der Variblen products[] verwaltet. Im weiteren Entwicklungsverlauf, könnte dieser Zustand verändert werden. <Copilot: was ist hier die Problematik? auch in einem Satz beschreiben>
-- Eher imperativer Ansatz, satt deklarative Code zu schreiben. Da wir die Variable products[] initialisieren und diese an das Template weiterreichen. <Copilot: hier in einem Satz erklären warum imperative nicht so gut ist>
-- Kein Reactive Style
+- **Manueller Umgang mit Subscriptions**  
+  Die Komponente ist selbst dafür verantwortlich, Subscriptions zu verwalten und korrekt aufzuräumen.  
+  Bei HTTP‑Requests ist das Risiko überschaubar, da diese nach der Antwort automatisch `complete()` werden.  
+  Bei **langlebigen Observables** (z. B. `interval()`, WebSockets, `valueChanges`, Router‑Events) kann ein fehlender oder fehlerhafter Cleanup jedoch dazu führen, dass Callbacks weiterhin ausgeführt werden, obwohl die Komponente bereits zerstört wurde. Dies kann unerwartetes Verhalten, Fehler und schwer nachvollziehbare Bugs verursachen.
+
+- **Vertikales Wachstum der Komponente**  
+  Mit jeder weiteren Subscription wächst die Komponente um zusätzlichen Boilerplate‑Code:  
+  weitere `loading`‑States, zusätzliche Subscriptions, zusätzliche `takeUntil()`‑Pipes oder eigene Cleanup‑Logik.  
+  Die eigentliche Fachlogik rückt dabei zunehmend in den Hintergrund, und der Code wird schwieriger zu lesen und zu warten.
+
+- **Zustandsverwaltung auf Komponentenebene**  
+  Der State (z. B. `products`) wird als veränderbare Variable in der Komponente gehalten und direkt im `subscribe()` manipuliert.  
+  Im weiteren Entwicklungsverlauf kann dieser Zustand an mehreren Stellen verändert werden, was die Nachvollziehbarkeit erschwert und schnell zu inkonsistentem oder unerwartetem Zustand führt.
+
+- **Imperativer statt deklarativer Ansatz**  
+  Die Komponente beschreibt nicht *was* angezeigt werden soll, sondern *wie* der Zustand Schritt für Schritt aufgebaut und geändert wird.  
+  Dieser imperative Stil erfordert mehr Steuerlogik, erhöht die Komplexität und erschwert es, den Datenfluss auf einen Blick zu verstehen.
+
+- **Kein reaktiver Stil**  
+  Durch das manuelle Ablegen der Daten in lokalen Variablen wird der reaktive Datenfluss unterbrochen.  
+  Das Template reagiert nicht direkt auf einen Stream, sondern auf explizit gesetzte Zwischenzustände in der Komponente.
 
 
 
 
 
 
-Analyse Code 3
-welche Probleme / Nachteile hat es
 
 
 und jetzt kommt die async-Pipe ins spiel
 
 Verbesserter Code mit async-Pipe
 
+Artikel 2: Deklarativ & Lifecycle‑Management durch Angular
 
-
-
+historische Einordnung
+Die async‑Pipe existiert bereits seit Angular 2, wurde in vielen Projekten jedoch lange Zeit kaum konsequent eingesetzt.
+Kaum propagiert
+Schulungen zeigten nur manuells subscribe()
+Viele Best-Practises kamen erst Jahre später, erst mit stärkerer Nutzung von RxJS
 
 Empfehlungen & nächster Schritt
 Was du sehr gut triffst:
-	• historische Einordnung
+
 	• realistische Projektperspektive
 	• differenzierte Aussage („nicht falsch, aber …“)
 Kleiner Verbesserungsvorschlag für Artikel 2:
 	• Kontrast klar machen:
 		• Artikel 1: Imperativ & Lifecycle‑Verantwortung beim Entwickler
-Artikel 2: Deklarativ & Lifecycle‑Management durch Angular
-
-Aussage aus: https://blog.angular-university.io/angular-reactive-templates/
-Because now we have here the state stored on this variable at the level of the component, we might be tempted to further write code that mutates that state.
-Here in this small example, it would not cause an issue, but in a larger application, this could potentially cause some maintainability problems.
-=> D.h. Zustand in der Komponente ist nicht optimal, weil man diesen potenziel verändern kann
 
 
-Das ist gut =>
-Die async‑Pipe existiert bereits seit Angular 2, wurde in vielen Projekten jedoch lange Zeit kaum konsequent eingesetzt.
 
-Oder noch knackiger:
 
-Obwohl die async‑Pipe seit Angular 2 verfügbar ist, dominiert in vielen bestehenden Codebases bis heute der manuelle subscribe().
 
-Kaum propagiert
-Schulungen zeigten nur manuells subscribe()
-Viele Best-Practises kamen erst Jahre später, erst mit stärkerer Nutzung von RxJS
+
