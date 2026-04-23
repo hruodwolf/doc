@@ -78,7 +78,25 @@ export class App implements OnInit, OnDestroy {
   Durch das manuelle Ablegen der Daten in lokalen Variablen wird der reaktive Datenfluss unterbrochen.  
   Das Template reagiert nicht direkt auf einen Stream, sondern auf explizit gesetzte Zwischenzustände in der Komponente.
 
+## Was ist die async‑Pipe?
 
+Die `async`‑Pipe ist eine integrierte Angular‑Pipe und Teil des `CommonModule`. Sie wurde speziell dafür entwickelt, asynchrone Datenquellen wie Observables oder Promises direkt im Template zu verarbeiten. Die asynchrone Verarbeitung findet dabei nicht mehr in der Komponente, sondern unmittelbar im Template statt.
+
+Durch den Einsatz der `async`‑Pipe ist ein manueller `subscribe()` in der Komponente nicht mehr notwendig. Angular übernimmt das Abonnieren des Observables automatisch, sobald die Pipe im Template verwendet wird, und kümmert sich ebenso um das Abbestellen, wenn die Template‑Bindung entfernt wird – beispielsweise beim Zerstören der Komponente.
+
+Dadurch reduziert sich der notwendige Boilerplate‑Code erheblich. Komponenten enthalten weniger Zustandsvariablen, da Daten nicht mehr explizit im `subscribe()` zwischengespeichert werden müssen. Der Code wird übersichtlicher, leichter lesbar und folgt einem stärker deklarativen Ansatz: Die Komponente beschreibt, *welche* Daten benötigt werden, während das Template definiert, *wie* diese dargestellt werden.
+
+Insgesamt verlagert die `async`‑Pipe die Verantwortung für das Subscription‑Management aus der Komponente heraus und ermöglicht so klar strukturierte, wartbare Angular‑Anwendungen mit einem konsistenteren reaktiven Datenfluss.
+
+Gerne – ich integriere deine Ergänzungen als **flüssigen Text**, korrigiere Sprache und Stil und halte die Aussage bewusst historisch‑einordnend, nicht wertend.
+
+## Historische Einordnung
+
+Die `async`‑Pipe existiert bereits seit Angular 2, wurde in vielen Projekten jedoch über einen langen Zeitraum hinweg kaum konsequent eingesetzt. In den Anfangsjahren von Angular lag der Fokus häufig auf einem schnellen Einstieg und auf grundlegendem Verständnis von Komponenten, Services und HTTP‑Requests. Entsprechend wurden in Schulungen und Tutorials meist manuelle `subscribe()`‑Aufrufe gezeigt, da sie leicht nachvollziehbar und gut sichtbar waren.
+
+Zudem wurde die `async`‑Pipe lange Zeit nur wenig aktiv propagiert. Viele Best Practices rund um reaktive Programmierung, saubere Trennung von Zuständigkeiten und deklarative Template‑Strukturen haben sich erst im Laufe der Jahre etabliert. Erst mit der stärkeren und breiteren Nutzung von RxJS im Projektalltag rückte auch die `async`‑Pipe zunehmend in den Fokus.
+
+In bestehenden Codebasen spiegelte sich diese Entwicklung häufig wider: Selbst wenn die `async`‑Pipe bereits verfügbar war, blieb der manuelle `subscribe()` lange der dominierende Ansatz. Die konsequente Nutzung deklarativer Patterns setzte sich oft erst deutlich später durch – meist dann, wenn Anwendungen größer wurden und die Nachteile manueller Subscription‑Verwaltung immer deutlicher zutage traten.
 
 
 
