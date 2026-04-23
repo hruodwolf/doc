@@ -7,7 +7,58 @@ Im ersten Teil dieser Serie haben wir uns das Ur‑Pattern für REST‑Calls in 
 Wir haben die Hintergründe beleuchtet, anhand von Code‑Beispielen gezeigt, wie dieser Ansatz aussieht, und erklärt, warum er über viele Jahre hinweg so häufig eingesetzt wurde.
 
 In diesem Beitrag betrachten wir nun die Kehrseite des manuellen Subscribe‑Patterns: die wachsende Komplexität, die dadurch in Komponenten entstehen kann. Außerdem zeigen wir, wie sich diese Komplexität durch den Einsatz der `async`‑Pipe deutlich reduzieren lässt – und wie dadurch übersichtlicher und wartbarer Angular‑Code entsteht.
-``
+
+=====
+Betrachten wir noch einmal den "manuelle subscribe" an und ergründen die Problematiken diesen Ansatzes.
+
+**Code 1: Manueller Subscribe**
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <p *ngIf="loading">Load data...</p>
+
+    <ul *ngIf="!loading && products.length > 0; else noData">
+      <li *ngFor="let product of products">
+        {{ product.id }} - {{ product.name }}
+      </li>
+    </ul>
+
+    <ng-template #noData>
+      <p>No data found</p>
+    </ng-template>
+  `,
+})
+export class App implements OnInit, OnDestroy {
+  products: Product[] = [];
+  loading = true;
+  private destroy$ = new Subject<void>();
+
+  constructor(readonly productService: ProductService) {}
+
+  ngOnInit() {
+    this.productService
+      .getProducts()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.products = value;
+        this.loading = false;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+}
+
+Nachteile:
+- Der code wächst mit weiteren Subscription vertikal
+
+
+
+
 
 
 Analyse Code 3
@@ -38,7 +89,7 @@ Here in this small example, it would not cause an issue, but in a larger applica
 => D.h. Zustand in der Komponente ist nicht optimal, weil man diesen potenziel verändern kann
 
 
-
+Das ist gut =>
 Die async‑Pipe existiert bereits seit Angular 2, wurde in vielen Projekten jedoch lange Zeit kaum konsequent eingesetzt.
 
 Oder noch knackiger:
