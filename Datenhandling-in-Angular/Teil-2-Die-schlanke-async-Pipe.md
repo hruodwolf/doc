@@ -131,3 +131,15 @@ export class App {
   }
 }
 ```
+## Erklärung des Codes
+
+Die Komponente benötigt keine Zwischenvariable für den Zustand der Daten mehr, sondern stellt ausschließlich ein `Observable` bereit. Dieses Observable wird im Konstruktor initialisiert, was in diesem Fall völlig valide ist, da kein manueller `subscribe()` mehr notwendig ist und somit auch keine Seiteneffekte ausgelöst werden.
+
+Durch den Einsatz von `products$ | async` im Template erfolgt das Abonnieren des Observables implizit über die `async`‑Pipe. Erst an dieser Stelle wird die Anfrage tatsächlich ausgeführt. Die Komponente selbst definiert lediglich den Datenstrom, ohne dessen Lifecycle manuell zu steuern.
+
+Mit `as products` wird ein Alias für die durch die `async`‑Pipe gelieferten Daten definiert. Dadurch können die Werte im weiteren Template komfortabel weiterverwendet werden, ohne erneut auf die Pipe zugreifen zu müssen.
+
+Da es sich um eine asynchrone Verarbeitung handelt, wird über `else loading` zunächst das entsprechende Loading‑Template gerendert, solange noch keine Daten verfügbar sind. Sobald die Anfrage abgeschlossen ist, wird überprüft, ob Daten vorhanden sind. Ist die Anfrage erfolgreich, liefert jedoch keine Einträge zurück, wird stattdessen über `else noData` das entsprechende Template angezeigt.
+
+> :point_up: Mit der `async`‑Pipe beschreibt die Komponente nur noch den benötigten Datenstrom.
+Das Abonnieren, Aktualisieren und Aufräumen übernimmt Angular automatisch im Template.
