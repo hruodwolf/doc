@@ -96,6 +96,38 @@ Zudem wurde die `async`‑Pipe lange Zeit nur wenig aktiv propagiert. Viele Best
 
 In bestehenden Codebasen spiegelte sich diese Entwicklung häufig wider: Selbst wenn die `async`‑Pipe bereits verfügbar war, blieb der manuelle `subscribe()` lange der dominierende Ansatz. Die konsequente Nutzung deklarativer Patterns setzte sich oft erst deutlich später durch – meist dann, wenn Anwendungen größer wurden und die Nachteile manueller Subscription‑Verwaltung immer deutlicher zutage traten.
 
+Das Beispiel aus Code 1 wird nun umgeschrieben, um den Einsatz der `async`‑Pipe zu zeigen.
 
+**Code 2: Von `subscribe()` zur async‑Pipe**
 
+```ts
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <ng-container *ngIf="products$ | async as products; else loading">
+      <ul *ngIf="products.length > 0; else noData">
+        <li *ngFor="let product of products">
+          {{ product.id }} - {{ product.name }}
+        </li>
+      </ul>
+    </ng-container>
 
+    <ng-template #loading>
+      <p>Load data...</p>
+    </ng-template>
+
+    <ng-template #noData>
+      <p>No data found</p>
+    </ng-template>
+  `,
+})
+export class App {
+  products$: Observable<Product[]>;
+
+  constructor(readonly productService: ProductService) {
+    this.products$ = this.productService.getProducts();
+  }
+}
+```
