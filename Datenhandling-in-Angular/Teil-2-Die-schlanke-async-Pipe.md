@@ -9,9 +9,12 @@ Wir haben die Hintergründe beleuchtet, anhand von Code‑Beispielen gezeigt, wi
 In diesem Beitrag betrachten wir nun die Kehrseite des manuellen Subscribe‑Patterns: die wachsende Komplexität, die dadurch in Komponenten entstehen kann. Außerdem zeigen wir, wie sich diese Komplexität durch den Einsatz der `async`‑Pipe deutlich reduzieren lässt – und wie dadurch übersichtlicher und wartbarer Angular‑Code entsteht.
 
 =====
+
+
 Betrachten wir noch einmal den "manuelle subscribe" an und ergründen die Problematiken diesen Ansatzes.
 
 **Code 1: Manueller Subscribe**
+```ts
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -52,6 +55,8 @@ export class App implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
+```
+
 
 Nachteile:
 - Der code wächst mit weiteren Subscription vertikal
