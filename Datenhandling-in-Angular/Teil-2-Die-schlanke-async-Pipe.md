@@ -143,3 +143,86 @@ Da es sich um eine asynchrone Verarbeitung handelt, wird über `else loading` zu
 
 > :point_up: Mit der `async`‑Pipe beschreibt die Komponente nur noch den benötigten Datenstrom.
 Das Abonnieren, Aktualisieren und Aufräumen übernimmt Angular automatisch im Template.
+
+## Moderne Angular‑Schreibweise: Weniger Boilerplate, mehr Klarheit
+
+Schauen wir uns einige Stellen an, an denen sich Angular in den letzten Versionen deutlich weiterentwickelt hat – und wie wir diese Entwicklungen nutzen können, um Code **klarer, deklarativer und wartbarer** zu schreiben.
+
+### Functional Inject und Built‑in Control Flow
+
+Mit **Angular 14 (2022)** wurde mit **Functional Inject (`inject()`)** eine moderne Alternative zur klassischen Constructor‑Injection eingeführt. Diese erlaubt es, Abhängigkeiten direkt als Klassenfelder zu deklarieren – ohne zusätzlichen Konstruktor‑Boilerplate.
+
+Ein weiterer großer Schritt folgte mit **Angular 17 (2023)**: die Einführung von **Built‑in Control Flow**. Damit wurden die bisherigen **Structural Directives** (`*ngIf`, `*ngFor`, `*ngSwitch`) durch neue, fest in die Template‑Sprache integrierte Konstrukte wie `@if` und `@for` ergänzt.  
+Das Ergebnis: weniger `ng-template`, weniger Microsyntax, bessere Lesbarkeit.
+
+**Code 3: Functional Inject & Built‑in Control Flow in der Praxis**
+```ts
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+  @if (products$ | async; as products) {
+    @if (products.length > 0) {
+      <ul>
+        @for (product of products; track product.id) {
+          <li>
+            {{ product.id }} - {{ product.name }}
+          </li>
+        }
+      </ul>
+    } @else {
+      <p>No data found</p>
+    }
+  } @else {
+    <p>Load data...</p>
+  }
+  `,
+})
+export class App {
+  productService = inject(ProductService);
+  products$: Observable<Product[]> = this.productService.getProducts();
+}
+```
+
+### Was hier passiert – und warum das sinnvoll ist
+
+#### 1. Field‑Injection statt Constructor‑Injection
+
+Mit `inject(ProductService)` verwenden wir **Field‑Injection**. Der entscheidende Vorteil:  
+Die Observable‑Variable `products$` kann **direkt bei der Deklaration** über den Service initialisiert werden.
+
+Das ist mit klassischer Constructor‑Injection nicht möglich, da der Konstruktor erst nach der Feldinitialisierung ausgeführt wird.  
+Das Ergebnis ist weniger Code, weniger Umwege – und eine klarere Intention.
+
+#### 2. Deklarative Templates mit Built‑in Control Flow
+
+Im Template nutzen wir `@if` und `@for` statt `*ngIf`, `*ngFor` und `ng-template`.  
+Der Kontrollfluss liest sich dadurch näher an JavaScript und beschreibt **klar und linear**, was dargestellt wird:
+
+*   Daten vorhanden?
+*   Liste nicht leer?
+*   Fallback bei leerem Ergebnis
+*   Loading‑Zustand
+
+All das ohne zusätzliche Template‑Referenzen oder Hilfskonstrukte.
+
+## Fazit
+
+*   Die **Async Pipe** vereinfacht den Umgang mit asynchronen Daten erheblich.  
+    Manuelles `subscribe()` sowie explizites `unsubscribe()` entfallen – Angular kümmert sich automatisch um das Subscription‑Lifecycle‑Management.
+*   Der Code wird insgesamt **deutlich deklarativer**:  
+    Komponente und Template beschreiben *was* dargestellt wird, nicht *wie* der Zustand intern verwaltet wird.
+*   Klassische Zwischenvariablen und explizite Loading‑State‑Flags werden überflüssig.
+*   Das Ergebnis ist **besser lesbarer, schlankerer und wartbarer Code**, der näher an der fachlichen Intention bleibt.
+
+## Quellen
+
+*   Angular Documentation – AsyncPipe
+    *   <https://angular.dev/api/common/AsyncPipe>
+*   Angular University – Reactive Angular Templates
+    *   <https://blog.angular-university.io/angular-reactive-templates/>
+*   Angular Documentation – Dependency Injection
+    *   <https://angular.dev/guide/di>
+*   Angular Documentation (v17) – Built‑in Control Flow
+    *   <https://v17.angular.io/guide/control_flow>
