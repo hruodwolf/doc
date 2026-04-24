@@ -1,4 +1,4 @@
-# Teil 1 – Der manuelle Subscribe – ein verbreitetes Pattern in Angular
+# Teil 1 – Der manuelle Subscribe – der Klassiker
 
 Schauen wir uns zuerst den **manuellen `subscribe()`** an.  
 Dieses Pattern wird häufig in Schulungen als einfache Demonstration für einen REST-Call gezeigt – und findet sich auch in vielen produktiven Angular-Anwendungen wieder.
