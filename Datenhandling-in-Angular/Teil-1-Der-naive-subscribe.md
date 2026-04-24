@@ -239,17 +239,17 @@ export class App implements OnInit, OnDestroy {
 
 ## Fazit
 
-Ein manueller `subscribe()` ist eine **legitime und weiterhin genutzte Herangehensweise** in Angular.
+Ein manueller `subscribe()` beschreibt eine **imperative** Herangehensweise zur Verarbeitung asynchroner Daten in Angular.
 
-Er eignet sich besonders dann, wenn:
+Er kann besonders dann sinnvoll sein, wenn:
 
-* explizite Kontrolle über den Ablauf benötigt wird
-* Seiteneffekte gezielt gesteuert werden sollen
+* explizite Kontrolle über den Ablauf benötigt wird  
+* Seiteneffekte gezielt gesteuert werden sollen  
 
-Für reine Datenanzeige kann er jedoch mehr Boilerplate erzeugen als nötig.
-Deklarative Ansätze (z. B. mit der `async`-Pipe) können hier eine Alternative darstellen – bringen aber ebenfalls eigene Trade-offs mit sich.
+Für reine Datenanzeige kann dieser Ansatz jedoch mehr Boilerplate erzeugen als nötig.  
+Deklarative Ansätze (z. B. mit der `async`-Pipe) stellen hier eine mögliche Alternative dar – bringen jedoch ebenfalls eigene Trade-offs mit sich.
 
-👉 Es handelt sich also nicht um „richtig“ oder „falsch“, sondern um unterschiedliche Ansätze mit jeweils eigenen Stärken.
+👉 Es handelt sich dabei nicht um „richtig“ oder „falsch“, sondern um unterschiedliche Ansätze mit jeweils eigenen Stärken und Einschränkungen.
 
 ---
 
