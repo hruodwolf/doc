@@ -1,20 +1,22 @@
-# Teil 1 – Der naive Subscribe – ein Klassiker aus der Angular‑Vergangenheit
+# Teil 1 – Der manuelle Subscribe – ein verbreitetes Pattern in Angular
 
 Schauen wir uns zuerst den **manuellen `subscribe()`** an.  
-Oft wird dieses Pattern in Schulungen nur als einfache Demonstration für einen REST-Call gezeigt. In der Praxis begegnet es einem jedoch erstaunlich häufig in produktiven Angular-Anwendungen.
+Dieses Pattern wird häufig in Schulungen als einfache Demonstration für einen REST-Call gezeigt – und findet sich auch in vielen produktiven Angular-Anwendungen wieder.
 
-Aus heutiger Sicht gehört der manuelle `subscribe()` für eine **reine Datenanzeige** eher zu den älteren Praktiken. Die Gründe für seinen Einsatz sind vielfältig:
+Aus heutiger Sicht ist der manuelle `subscribe()` für eine **reine Datenanzeige** eine mögliche Herangehensweise unter mehreren. Die Gründe für seinen Einsatz sind vielfältig:
 
-*   **Einsteiger** nutzten dieses Pattern häufig, weil es leicht verständlich ist:  
+*   **Einsteiger** nutzen dieses Pattern häufig, weil es leicht verständlich ist:  
     Alles passiert an einer Stelle, der Datenfluss ist direkt sichtbar.
-*   **Fortgeschrittene Entwickler** griffen darauf zurück, weil es schnell geschrieben ist, für einfache Anwendungsfälle ausreicht und in Projekten meist akzeptiert wurde.
-*   **Zeitdruck** spielte – wie so oft – ebenfalls eine Rolle.
+*   **Fortgeschrittene Entwickler** greifen darauf zurück, weil es schnell geschrieben ist und für viele einfache Anwendungsfälle ausreicht.
+*   **Zeitdruck** spielt – wie so oft – ebenfalls eine Rolle.
 
-Für Entwickler, die heute eher mit neueren Konzepten wie der `async`-Pipe oder Signals arbeiten, stellt dieses Pattern eine zusätzliche Hürde dar. Das `subscribe()` findet in modernen Ansätzen meist „unter der Haube“ statt und ist nicht mehr explizit sichtbar.
+Für Entwickler, die eher mit deklarativen Ansätzen wie der `async`-Pipe oder Signals arbeiten, wirkt dieses Pattern teilweise ungewohnter, da das `subscribe()` dort meist nicht explizit sichtbar ist, sondern indirekt gehandhabt wird.
 
-> Das folgende Beispiel ist bewusst stark vereinfacht – ohne Logging, Navigation oder Fehlerbehandlung.
+> Das folgende Beispiel ist bewusst vereinfacht – ohne Logging, Navigation oder Fehlerbehandlung.
 
-**Code 1: Manueller Subscribe in der Komponente**
+---
+
+## Code 1: Manueller Subscribe in der Komponente
 
 ```ts
 @Component({
@@ -50,19 +52,23 @@ export class App implements OnInit {
       });
   }
 }
-```
+````
+
+---
 
 ## Erläuterung zu Code 1
+
 ### Datenanfrage in der Komponente
+
 ```ts
 this.http.get<Product[]>('/api/products')
 ```
 
-Diese Zeile liefert **ein Observable** zurück.\
-Zu diesem Zeitpunkt werden **noch keine Daten geladen** und **keine HTTP‑Anfrage gestartet**.\
+Diese Zeile liefert **ein Observable** zurück.
+Zu diesem Zeitpunkt werden **noch keine Daten geladen** und **keine HTTP-Anfrage gestartet**.
 Das Observable beschreibt lediglich, *was passieren soll*, sobald jemand es abonniert.
 
-Erst mit dem Aufruf von `subscribe()` wird das Observable tatsächlich aktiviert – **jetzt entsteht eine Subscription und die Anfrage wird an den Server gesendet**.
+Erst mit dem Aufruf von `subscribe()` wird das Observable aktiviert – **jetzt entsteht eine Subscription und die Anfrage wird ausgeführt**.
 
 ```ts
 .subscribe((value) => {
@@ -70,37 +76,58 @@ Erst mit dem Aufruf von `subscribe()` wird das Observable tatsächlich aktiviert
 });
 ```
 
-Im `subscribe()` wird die **Callback‑Funktion** definiert, also das Verhalten, das ausgeführt wird, **wenn der Server die Anfrage erfolgreich beantwortet**.
+Im `subscribe()` wird definiert, was passieren soll, **wenn Daten eintreffen**.
 
 In diesem Fall:
 
-*   werden die vom Server gelieferten Daten (`value`)
-*   – sobald sie verfügbar sind –   
-*   der lokalen Komponenteneigenschaft `products` zugewiesen.
+* werden die vom Server gelieferten Daten (`value`)
+* der lokalen Komponenteneigenschaft `products` zugewiesen
 
-Dadurch stehen die Daten der Komponente zur Verfügung.
+Damit stehen die Daten der Komponente zur Verfügung.
 
-> :point_up: Die Anfrage wird sofort gestartet, die Daten werden asynchron bereitgestellt.
+> :point_up: Die Anfrage wird beim `subscribe()` ausgelöst, die Daten werden asynchron bereitgestellt.
+
+---
 
 ### Darstellung der Daten im Template
 
-Da `products` nun initialisiert ist, kann Angular die Daten über `*ngFor` iterieren und im Template darstellen.\
-Sobald sich der Wert von `products` ändert, aktualisiert Angular automatisch die Anzeige.
+Da `products` gesetzt wird, kann Angular die Daten über `*ngFor` darstellen.
+Sobald sich der Wert ändert, wird die Anzeige automatisch aktualisiert.
 
-
+---
 
 ### Zusammengefasst
 
-*   `http.get()` allein startet **keine Anfrage**
-*   `subscribe()` aktiviert das Observable und definiert den Callback
-*   die Logik zur Datenverarbeitung liegt vollständig im `subscribe()`
-*   das Template rendert den aktuellen Zustand der Komponentendaten
+* `http.get()` allein startet **keine Anfrage**
+* `subscribe()` aktiviert das Observable
+* die Datenverarbeitung erfolgt im Callback
+* das Template rendert den aktuellen Zustand
+
+---
+
+## Einordnung des Patterns
+
+Der manuelle `subscribe()` ist ein **imperativer Ansatz**:
+
+* Die Komponente steuert aktiv, *wann* und *wie* Daten verarbeitet werden
+* Zustand wird lokal gehalten und verändert
+
+Das ist ein **valider und etablierter Stil**, bringt aber je nach Anwendung unterschiedliche Trade-offs mit sich:
+
+* mehr Kontrolle über den Ablauf
+* dafür potenziell mehr Boilerplate
+* stärker verteilte Zustandslogik bei wachsender Komplexität
+
+---
 
 ## Kleines Refactoring
-### Trennung von Datenzugriff und Darstellung
-Der erste sinnvolle Schritt zur Verbesserung ist, den `http.get()`-Aufruf in eine **injectable, wiederverwendbare Service-Klasse** auszulagern. Dadurch trennen wir Datenzugriff und Darstellung und erhalten eine wartbarere Struktur.
 
-**Code 2: Ausgelagerter Datenzugriff im ProductService**
+### Trennung von Datenzugriff und Darstellung
+
+Ein häufiger nächster Schritt ist, den Datenzugriff in einen Service auszulagern.
+
+**Code 2: ProductService**
+
 ```ts
 @Injectable({
   providedIn: 'root',
@@ -114,46 +141,54 @@ export class ProductService {
 }
 ```
 
-### Muss man Subscriptions aufräumen?
+Das verbessert die Struktur und Wiederverwendbarkeit, unabhängig davon, ob später weiterhin manuell subscribt wird oder nicht.
 
-Oft hört man: *„Du musst Subscriptions wegen Memory Leaks aufräumen.“*  
-Bei `HttpClient`-Requests ist diese Aussage jedoch nur teilweise richtig.
+---
 
-`this.http.get()` liefert ein **cold Observable** mit folgenden Eigenschaften:
+## Muss man Subscriptions aufräumen?
 
-1.  Die Anfrage startet erst, wenn jemand `subscribe()` aufruft.
-2.  Ein `unsubscribe()` bricht eine laufende Anfrage ab.
-3.  Sobald der Server antwortet, wird das Observable automatisch **completed**.
+Oft hört man: *„Du musst Subscriptions wegen Memory Leaks aufräumen.“*
+Bei `HttpClient`-Requests ist diese Aussage differenziert zu betrachten.
 
-Aus Punkt 3 folgt:  
-**Ein `HttpClient`-Request verursacht in der Regel kein Memory Leak**, auch wenn man ihn nicht explizit abbestellt.
+`this.http.get()` liefert ein **cold Observable**:
 
-#### Wo liegt dann das Problem?
+1. Die Anfrage startet erst bei `subscribe()`
+2. Ein `unsubscribe()` kann eine laufende Anfrage abbrechen
+3. Nach der Antwort wird das Observable automatisch **completed**
 
-Das Risiko liegt **nicht im Observable**, sondern **im Subscribe-Callback**.
+Das bedeutet:
 
-Wird während einer laufenden Anfrage z. B. auf eine andere Seite navigiert und die Komponente zerstört, kann der Callback dennoch ausgeführt werden. Greift dieser dann auf eine bereits zerstörte Komponente zu, kann das zu Fehlern oder unerwartetem Verhalten führen.
+👉 Ein einzelner HTTP-Request führt in der Regel **nicht direkt zu einem Memory Leak**
 
-Deshalb gilt die Empfehlung:
+---
 
-> **Subscriptions sollten immer bereinigt werden, wenn eine Komponente zerstört wird – auch bei HTTP-Requests.**
+### Wo kann dennoch ein Problem entstehen?
 
+Das Risiko liegt eher im **Callback**:
 
-### Elegantes Aufräumen mit `takeUntil()`
+Wenn eine Komponente während einer laufenden Anfrage zerstört wird, kann der Callback dennoch ausgeführt werden.
+Je nach Zugriff auf den Zustand kann das zu unerwartetem Verhalten führen.
 
-Es gibt verschiedene Möglichkeiten, Subscriptions sauber zu beenden.  
-Ein besonders bewährtes Pattern ist der Einsatz von `takeUntil()`.
+Daher ist es oft sinnvoll, Subscriptions bewusst zu beenden – insbesondere bei langlebigen oder mehrfachen Streams.
 
-**Idee:**  
-Ein Observable läuft so lange, bis ein anderes Observable signalisiert: *„Stopp!“*
+---
 
-#### Vorteile von `takeUntil()`:
+## Elegantes Aufräumen mit `takeUntil()`
 
-*   Kein manuelles Tracken einzelner `Subscription`-Objekte
-*   Funktioniert mit mehreren Streams gleichzeitig
-*   Sehr gut skalierbar in komplexeren Komponenten
+Ein gängiges Pattern ist `takeUntil()`:
 
-**Code 3: Verbesserte Version des Manuellen Subscribes**
+**Idee:**
+Ein Stream läuft, bis ein zweiter Stream ein Stoppsignal sendet.
+
+### Vorteile
+
+* kein manuelles Verwalten einzelner Subscriptions
+* gut kombinierbar mit mehreren Streams
+* häufig in größeren Komponenten zu finden
+
+---
+
+## Code 3: Variante mit `takeUntil()`
 
 ```ts
 @Component({
@@ -198,20 +233,37 @@ export class App implements OnInit, OnDestroy {
 }
 ```
 
+> :point_up: Dieses Pattern bietet mehr Kontrolle über den Lifecycle, bringt aber auch zusätzlichen Code mit sich.
 
+---
 
 ## Fazit
 
-Ein manueller `subscribe()` ist **nicht per se falsch**. Entscheidend ist der **bewusste Einsatz**.
+Ein manueller `subscribe()` ist eine **legitime und weiterhin genutzte Herangehensweise** in Angular.
 
-Für einfache REST-Calls, bei denen Daten ausschließlich angezeigt werden, ist dieses Pattern heute jedoch meist unnötig. Moderne Angular-Anwendungen profitieren deutlich von deklarativen Ansätzen, bei denen Subscription-Logik automatisch gehandhabt wird.
+Er eignet sich besonders dann, wenn:
 
-Genau darum geht es im nächsten Artikel dieser Serie:
+* explizite Kontrolle über den Ablauf benötigt wird
+* Seiteneffekte gezielt gesteuert werden sollen
 
-**Teil 2: Die schlanke async-Pipe – Daten anzeigen ohne Subscribe**
+Für reine Datenanzeige kann er jedoch mehr Boilerplate erzeugen als nötig.
+Deklarative Ansätze (z. B. mit der `async`-Pipe) können hier eine Alternative darstellen – bringen aber ebenfalls eigene Trade-offs mit sich.
+
+👉 Es handelt sich also nicht um „richtig“ oder „falsch“, sondern um unterschiedliche Ansätze mit jeweils eigenen Stärken.
+
+---
+
+## Ausblick
+
+Im nächsten Teil betrachten wir eine dieser Alternativen:
+
+**Teil 2: Die schlanke async-Pipe – Daten anzeigen ohne Subscribe**
+
+---
 
 ## Quellen
+
 * Angular Documentation – Making HTTP requests
-  * https://angular.dev/guide/http/making-requests
+  [https://angular.dev/guide/http/making-requests](https://angular.dev/guide/http/making-requests)
 * Angular Documentation – HTTP: Request data from a server
-  * https://v17.angular.io/guide/http-request-data-from-server
+  [https://v17.angular.io/guide/http-request-data-from-server](https://v17.angular.io/guide/http-request-data-from-server)
