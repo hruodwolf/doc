@@ -191,8 +191,6 @@ export class App {
 
 Mit `inject(ProductService)` verwenden wir **Field‑Injection**. Der entscheidende Vorteil:  
 Die Observable‑Variable `products$` kann **direkt bei der Deklaration** über den Service initialisiert werden.
-
-Das ist mit klassischer Constructor‑Injection nicht möglich, da der Konstruktor erst nach der Feldinitialisierung ausgeführt wird.  
 Das Ergebnis ist weniger Code, weniger Umwege – und eine klarere Intention.
 
 #### 2. Deklarative Templates mit Built‑in Control Flow
